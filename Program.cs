@@ -24,4 +24,91 @@ List<List<int>> rooms = [
 ];
 List<string> indexes = ["ROOM", "NORTH", "EAST", "SOUTH", "WEST"];
 
+// the current room
+int current = 1;
+
+// the status of the game
+bool isActive = true;
+
+// Room
+// accept a room number
+// if room number is 10, player escapes
+// Write the room number and available doors to the console
+// if no available doors, player is trapped
+// returns false if the player has escaped or is trapped, else returns true 
+bool Room (int number)
+{ 
+
+  if (number == 10) {
+    Console.WriteLine("\nYou have escaped!");
+    return false;
+  }
+
+  List<int> room = rooms[number - 1];
+  List<string> directions = [];
+  Console.WriteLine($"\nYou have entered Room {number}");
+  
+  for (int i = 1; i < indexes.Count; i++) 
+  {
+    if (room[i] != 0) 
+    {
+      directions.Add($"{indexes[i]}");
+    }
+  }
+ 
+  if (directions.Count > 0)
+  {
+    Console.WriteLine("\nYour available doors are: ");
+    foreach (string direction in directions)
+    {
+      Console.WriteLine(direction);
+    }
+
+    return true;
+  } 
+  
+  Console.WriteLine("There is no way out. You are trapped!");
+  return false;
+}
+
+while (isActive)
+{
+  // gets the room information
+  isActive = Room(current);
+
+  // if action can be taken, ask user for an action
+  if (isActive)
+  {
+    Console.Write("\nWhich door do you choose: ");
+    string? direction = Console.ReadLine(); // expects. NORTH, SOUTH, etc
+
+    if (!string.IsNullOrEmpty(direction))
+    {
+      int index = indexes.IndexOf(direction.ToUpper());
+      if (index != -1) 
+      {
+        current = rooms[current - 1][index];
+      } 
+      else
+      {
+        Console.WriteLine("Not a valid response");
+      }
+    }
+    else
+    {
+      Console.WriteLine("Not a valid response");
+    }
+  }
+  else
+  {
+    Console.WriteLine("\nWould you like to play again? (Y/y)");
+    string? response = Console.ReadLine();
+    if (!string.IsNullOrEmpty(response) && response.ToLower() == "y")
+    {
+      isActive = true;
+      current = 1;
+    }
+  }
+}
+
 
